@@ -13,6 +13,7 @@ Following script starts in the `/root/recon` directory. For each folder inside `
     - 200 OK → `200_subs.txt`
     - 403 Forbidden → `403_subs.txt`
     - 404 Not Found → `404_subs.txt`
+- reuesting the body of each live host (status 200) using @tomnomnom's `fff` and saving the respons under a `roots` folder for futher digging
  
 ```
 #!/bin/bash

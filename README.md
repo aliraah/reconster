@@ -1,7 +1,6 @@
 # reconster
 
-# reconster
-Following script starts in the `/root/recon` directory. For each folder inside `/recon` the following tasks are repeated: 
+Following tasks are repeated for each folder under the `/root/recon/` directory containing a `wildcard` file including a target domain or list of domains:
 
 - if a file named `wildcard` exists, the program name is set to the name of the directory
 - subdomain enumeration via `subfinder` with the `wildcard` file as input

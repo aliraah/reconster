@@ -14,6 +14,10 @@ Following script starts in the `/root/recon` directory. For each folder inside `
     - 403 Forbidden → `403_subs.txt`
     - 404 Not Found → `404_subs.txt`
 - reuesting the body of each live host (status 200) using @tomnomnom's `fff` and saving the respons under a `roots` folder for futher digging
+- piping `httpx.txt` into `cut` & `sed` to clean the formatting, then pinging each host -> `pinged.tmp`
+- using `grep`, `cut`, and `sed` to clean and filter unwanted results -> `pinged_ips.tmp`
+- checking to see which IPs are behind a WAF or a CDN via `cdncheck` ->  `waf-cdn.txt`
+- finally using `comm` to get rid of IPs behind a WAF/CDN, leaving us with IPs we can directly hit -> `direct_ips.txt`
  
 ```
 #!/bin/bash
@@ -37,6 +41,12 @@ if [[ -d "$baseDir" ]]; then
 
                         cat "${dir}/200_subs.txt" | fff -d 200 -S -o "${dir}/roots"
 
+                        cat "${dir}/httpx.txt" | cut -d " " -f 1 | sed 's,http://,,' | sed 's,https://,,' | xargs -I{} ping -t 2 -c 4 {} | anew "${dir}/pinged.tmp"
+                        cat "${dir}/pinged.tmp" | grep PING | cut -d " " -f 3 | sed 's,(,,' | sed 's,),,' | anew "${dir}/pinged_ips.tmp"
+                        cdncheck -i "${dir}/pinged_ips.tmp" -waf -cdn | anew "${dir}/waf-cdn.txt"
+                        comm -23 <(sort "${dir}/pinged_ips.tmp") <(sort "${dir}/waf-cdn.txt") | anew "${dir}/direct_ips.txt"
+                        rm "${dir}/*.tmp"
+
                 else
                         programName=$(basename "$dir")
                         echo "No wildcard found for $programName!"
@@ -49,23 +59,3 @@ fi
 
 <br>
 <br>
-#################TO-BE-INTEGRATED-LATER################ <br>
-<br>
-
-piping `httpx.txt` into `cut` & `sed` to clean the formatting, then pinging each host and saving the result as `pinged.txt`
-
-using `grep`, `cut`, and `sed` to clean and filter the results we want, saving as `pinged_ips.txt`
-
-use `cdncheck` to check which of these IPs are behind a CDN or WAF 
-
-finally using `comm` to sort and compare the 2 text files (one with all the IPs and one with IPs behind CDN or WF) ,extracting those from the list of all IPs, and we are left with IPs we can directly hit
-
-```
-cat httpx.txt | cut -d " " -f 1 | sed 's,http://,,' | sed 's,https://,,' | xargs -I{} ping -t 2 -c 4 {} | anew pinged.txt
-
-cat pinged.txt | grep PING | cut -d " " -f 3 | sed 's,(,,' | sed 's,),,' | anew pinged_ips.txt
-
-cdncheck -i pinged_ips.txt -waf -cdn -o cdncheck-waf-cdn
-
-comm -23 <(sort pinged_ips.txt) <(sort cdncheck-waf-cdn) | grep -P '\d+\.\d+\.\d+\.\d+'
-```

@@ -3,7 +3,7 @@
 # reconster
 Following script starts in the `/root/recon` directory. For each folder inside `/recon` the following tasks are repeated: 
 
-- if a file named `wildcard`exits, the program name is set to the name of the directory
+- if a file named `wildcard` exists, the program name is set to the name of the directory
 - subdomain enumeration via `subfinder` with the `wildcard` file as input
 - piping subdomain into `dnsx` for DNS resolution
 - saving unique results in a text file: `resolved_subdomains.txt`

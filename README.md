@@ -34,6 +34,8 @@ if [[ -d "$baseDir" ]]; then
                         cat "${dir}/httpx.txt" | grep '\[403\]' | cut -d ' ' -f 1 | anew "${dir}/403_subs.txt"
                         cat "${dir}/httpx.txt" | grep '\[404\]' | cut -d ' ' -f 1 | anew "${dir}/404_subs.txt"
 
+                        cat "${dir}/200_subs.txt" | fff -d 200 -S -o "${dir}/roots"
+
                 else
                         programName=$(basename "$dir")
                         echo "No wildcard found for $programName!"

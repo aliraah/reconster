@@ -1,5 +1,7 @@
 # reconster
 
+DISCLAIMER: This project is a small extension of one of Gunnar Andrew's (twiiter.com/G0LDEN_infosec) automation methodologies. 
+
 Following tasks are repeated for each folder under the `/root/recon/` directory containing a `wildcard` file including a target domain or list of domains:
 
 - if a file named `wildcard` exists, the program name is set to the name of the directory

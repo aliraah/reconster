@@ -14,4 +14,4 @@ else
         echo "'$org_name' already exists."
         echo "Finding subdomains..."
 fi
-./stage2.sh "${baseDir}/${org_name}" $org_nam
+./stage2.sh "${baseDir}/${org_name}" $org_name
